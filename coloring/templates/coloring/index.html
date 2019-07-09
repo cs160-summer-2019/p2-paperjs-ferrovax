@@ -55,17 +55,42 @@
 				$container: $('#color-palette')
 			}
 
+      
 			// your rectangle gradient interaction goes in this function
 			// you may also add code outside of the function (e.g., global variables)
 			function myGradientInteraction(){
 				var tool = new paper.Tool();
+        //getColorsCreatePalette();
+  
+        var rectangle = new paper.Rectangle(200, 200, 400, 200);
+        var path = new paper.Path.Rectangle(rectangle);
+        path.fillColor = '#ff0000';
+        
+        var o = null;
+        var d = null;
 
-				tool.onMouseDown = function (event) {
+				path.onMouseDown = function (event) {
+          o = event.point;
+          //console.log(o);
 
 				}
 
-				tool.onMouseUp = function (event) {
-					
+				path.onMouseUp = function (event) {
+          d = event.point;
+          //console.log(d);
+          
+          var l = cp.history.length;
+          var s = [cp.history[l-2], cp.history[l-1]]
+        
+          if (o !== null && d !== null) {
+            path.fillColor = {
+              gradient: {
+                stops: s
+              },
+              origin: o,
+              destination: d
+            };
+          }
 				}
 			}
 
@@ -93,6 +118,7 @@
 					$swatch.click(function(){
 						// add color to the color palette history
 					  	cp.history.push($(this).css("background-color"));
+              console.log("color confirmed");
 					});
 					cp.$container.append($swatch);
 				}
